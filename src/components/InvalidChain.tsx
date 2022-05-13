@@ -34,7 +34,7 @@ export default function Registar(props: any) {
           >
             <Image src={logo} alt="" w={"300px"} />
 
-            <Text fontSize="xl">Select Ethereum mainnet to continue!</Text>
+            <Text fontSize="xl">Select Ethereum ropsten to continue!</Text>
 
             <StackDivider h={"20px"} />
           </VStack>

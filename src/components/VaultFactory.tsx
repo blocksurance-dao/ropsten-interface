@@ -70,6 +70,8 @@ export default function VaultFactory(props: any) {
         .send({
           from: account,
           value: weiValue,
+          // gas: "15000000",
+          // gasLimit: "8000000000",
         });
 
       /**

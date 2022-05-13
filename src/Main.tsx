@@ -144,9 +144,9 @@ const Main: React.FC = () => {
       setEtherBalance(balance);
     }
     if (account?.length) {
-      // if (chainId !== 1 && chainId !== 31337) {
-      //   return <InvalidChain />;
-      // }
+      if (chainId !== 3) {
+        return <InvalidChain />;
+      }
       if (!validpin) {
         return (
           <Flex align="center" justify="center" padding="10px" minH="90vh">
@@ -225,7 +225,7 @@ const Main: React.FC = () => {
       setEtherBalance(balance);
     }
     if (account?.length) {
-      if (chainId !== 1 && chainId !== 31337) {
+      if (chainId !== 3) {
         return <InvalidChain />;
       }
       if (!validpin) {
