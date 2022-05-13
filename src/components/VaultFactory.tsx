@@ -84,11 +84,6 @@ export default function VaultFactory(props: any) {
           "Vault address",
           tx.events.VaultDeployed.returnValues.vaultAddress
         );
-        // setResult(
-        //   tx.transactionHash
-        // );
-        // console.log(result);
-        props.updateBalance();
       }
     } else {
       alert("You have to have a Stake to create vault!");
