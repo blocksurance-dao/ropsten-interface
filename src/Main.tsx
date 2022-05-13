@@ -20,6 +20,7 @@ import { Landing } from "./components/Landing";
 import useWindowDimensions from "./hooks/useWindowDimensions";
 import Login from "./components/Login";
 import InvalidChain from "./components/InvalidChain";
+const INFURA_ID = process.env.REACT_APP_INFURA_ID;
 
 const useScrollToTop = () => {
   const location = useLocation();
@@ -87,6 +88,23 @@ const Main: React.FC = () => {
       setNetwork(network);
       console.log(network);
     });
+    // const webSocketProvider = new Web3.providers.WebsocketProvider(
+    //   "wss://ropsten.infura.io/ws/v3/" + INFURA_ID
+    // );
+    // const web3Ws = new Web3(webSocketProvider);
+    // var subscription = web3Ws?.eth.subscribe(
+    //   "pendingTransactions",
+    //   function (error: any, result: any) {
+    //     if (!error) console.log(result);
+    //   }
+    // );
+
+    // subscription.on("data", async function (transaction: any) {
+    //   console.log(transaction);
+    //   let balance: any = await web3instance?.eth.getBalance(account);
+    //   //setEtherBalance(balance);
+    //   console.log(balance);
+    // });
   };
 
   const onConnect = async () => {
@@ -139,6 +157,7 @@ const Main: React.FC = () => {
 
   function Home() {
     useScrollToTop();
+
     async function _updateBalance() {
       let balance: any = await web3instance?.eth.getBalance(account);
       setEtherBalance(balance);

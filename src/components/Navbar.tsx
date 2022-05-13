@@ -158,7 +158,7 @@ const Navbar: FC<{
                     <Box p={3}>
                       <CLink
                         href={
-                          "https://etherscan.io/address/0x88888883D7434785e02AC8475B9c9E7b1d3Dd293"
+                          "https://ropsten.etherscan.io/address/0x8888888EE5EA2820f3eC98FbDa45a741c4334Ee2"
                         }
                         isExternal
                       >
