@@ -221,6 +221,14 @@ export default function StakeInterface(props: any) {
   }
 
   async function stakeTokens() {
+    if (amount < 20000) {
+      alert("The minimum stake amound is 20000 4SURE tokens.");
+      return;
+    } 
+    if (amount > allowance) {
+      alert("Please increase the allowance to at lease 20,000 4SURE tokens.");
+      return;
+    }
     setLoading(true);
 
     var stakerContract = new web3.eth.Contract(STAKER_ABI, STAKER_ADDRESS);
@@ -585,9 +593,9 @@ export default function StakeInterface(props: any) {
             isLoading={loading}
             loadingText="Loading..."
             disabled={
-              parseInt(amount) < 300 ||
+              (parseInt(amount) < 300 ||
               parseInt(allowance) < parseInt(amount) ||
-              stake > 0
+              stake > 0) && loading
             }
             onClick={stakeTokens}
           >
