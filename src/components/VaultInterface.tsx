@@ -146,6 +146,10 @@ export default function VaultInterface(props: any) {
   }
 
   async function approveDeposit() {
+    if(!token || !(token>0)) {
+      alert("Please enter an amount of tokens.");
+      return;
+    }
     setLoading(true);
     var coinContract = new web3.eth.Contract(ERC20_ABI, active?.tokenAddress);
 
@@ -169,6 +173,14 @@ export default function VaultInterface(props: any) {
   }
 
   async function Deposit() {
+    if(!token || !(token>0)) {
+      alert("Please enter an amount of tokens.");
+      return;
+    }
+    if(token > allowance) {
+      alert("Your deposit amount must be equal to or less than your allowance. Please increase your allowance.");
+      return;
+    }
     setLoading(true);
     var vaultContract = new web3.eth.Contract(VAULT_ABI, active?.vaultAddress);
 
