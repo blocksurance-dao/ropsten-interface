@@ -65,7 +65,9 @@ export default function VaultFactory(props: any) {
     if (staked?.amount > 0) {
       const weiValue = web3.utils.toWei("0.005", "ether");
       // console.log(weiValue);
-      let tx = await factoryContract.methods
+      let tx;
+      try { 
+      tx = await factoryContract.methods
         .createVault(token, API_KEY, name)
         .send({
           from: account,
@@ -73,6 +75,9 @@ export default function VaultFactory(props: any) {
           // gas: "15000000",
           // gasLimit: "8000000000",
         });
+      } catch (error) {
+        setLoading(false);
+      }
 
       /**
        * tx.hash is transaction id that we can use to create etherscan link
@@ -138,7 +143,7 @@ export default function VaultFactory(props: any) {
         isLoading={loading}
         loadingText="Loading..."
         onClick={createVault}
-        disabled={!valid || name.length === 0}
+        disabled={(!valid || name.length === 0) && loading}
       >
         Create Vault
       </Button>
