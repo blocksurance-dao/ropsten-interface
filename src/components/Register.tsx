@@ -48,43 +48,32 @@ export default function Registar(props: any) {
     };
   }, [refcode, web3]);
 
-  // useEffect(() => {
-  //   isMounted.current = true;
-  //   var rContract = new web3.eth.Contract(REGISTAR_ABI, REGISTAR_ADDRESS);
-  //   rContract.methods
-  //     .get(account, API_KEY)
-  //     .call({ from: account })
-  //     .then(function (result: boolean) {
-  //       // console.log(result);
-  //       if (isMounted.current) {
-  //         setRegistered(result);
-  //       }
-  //     });
-
-  //   return () => {
-  //     isMounted.current = false;
-  //   };
-  // }, [account, web3]);
-
-  function register() {
+  async function register() {
     setLoading(true);
-
-    registarContract.methods
-      .register(refcode)
-      .send({
+    let tx;
+    try {
+      tx = await registarContract.methods.register(refcode).send({
         from: account,
         gasLimit: 3000000,
-      })
-      .then((res: any) => {
-        console.log("Registered successfully!");
-        props.regComplete();
-      })
-      .catch((e: any) => {
-        console.log(e);
-      })
-      .finally(() => {
-        setLoading(false);
       });
+      if (tx?.transactionHash) {
+        registarContract.methods
+          .get(account)
+          .call()
+          .then(function (result: boolean) {
+            if (result) {
+              console.log("Registered successfully!");
+              props.regComplete();
+            }
+          });
+      }
+    } catch (error: any) {
+      //console.log(error);
+      let message = error?.message;
+      console.log(message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
