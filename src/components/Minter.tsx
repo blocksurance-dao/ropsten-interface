@@ -114,6 +114,7 @@ export default function Minter(props: any) {
       let nftTxn = await nftContract.methods.mint(auth, mintCount).send({
         from: account,
         value: "" + cost,
+        gasLimit: 3000000,
       });
 
       /**
