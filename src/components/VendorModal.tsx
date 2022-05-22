@@ -241,7 +241,7 @@ const VendorModal = ({
               fontSize="sm"
               display="flex"
               alignItems="center"
-              href={`https://rinkeby.etherscan.io/address/${tlink}`}
+              href={`https://rinkeby.etherscan.io/tx/${tlink}`}
               isExternal
               color="gray.400"
               ml={6}
