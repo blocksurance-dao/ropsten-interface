@@ -84,7 +84,7 @@ export default function About() {
             </HStack>
             <Link
               href={
-                "https://etherscan.io/address/0x88888883D7434785e02AC8475B9c9E7b1d3Dd293"
+                "https://rinkeby.etherscan.io/address/0x40CCa83c7A8C02b220E6d5DBD7531F43680bC0B9"
               }
               isExternal
             >
