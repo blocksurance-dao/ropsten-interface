@@ -21,7 +21,6 @@ const VENDOR_ABI = require("../assets/vendor-abi.json");
 const COIN_ADDRESS = process.env.REACT_APP_COIN_ADDRESS || "";
 const STAKER_ADDRESS = process.env.REACT_APP_STAKER_ADDRESS || "";
 const VENDOR_ADDRESS = process.env.REACT_APP_VENDOR_ADDRESS || "";
-const API_KEY = process.env.REACT_APP_API_KEY;
 
 export default function StakeInterface(props: any) {
   const web3 = props.web3;
@@ -88,7 +87,7 @@ export default function StakeInterface(props: any) {
       });
 
     stakerContract?.methods
-      .getUserStake(account, API_KEY)
+      .getUserStake(account)
       .call()
       .then((res: any) => {
         if (isMounted.current) {
@@ -118,21 +117,6 @@ export default function StakeInterface(props: any) {
       isMounted.current = false;
     };
   }, [loading, account, web3, isOpen]);
-
-  // function updateBalance() {
-  //   var coinContract = new web3.eth.Contract(ERC20_ABI, COIN_ADDRESS);
-  //   coinContract.methods
-  //     .balanceOf(account)
-  //     .call()
-  //     .then((res: any) => {
-  //       if (isMounted.current) {
-  //         setBalance(parseFloat(formatEther(res)).toFixed(2));
-  //       }
-  //     })
-  //     .catch((e: any) => {
-  //       console.log(e);
-  //     });
-  // }
 
   function updateAPR(newdays: number) {
     if (newdays > 360) {
@@ -206,6 +190,7 @@ export default function StakeInterface(props: any) {
         .approve(STAKER_ADDRESS, web3.utils.toWei(amount, "ether"))
         .send({
           from: account,
+          gasLimit: 3000000,
         });
       // console.log(approved);
       if (approved.transactionHash) {
@@ -224,7 +209,7 @@ export default function StakeInterface(props: any) {
     if (amount < 20000) {
       alert("The minimum stake amound is 20000 4SURE tokens.");
       return;
-    } 
+    }
     if (amount > allowance) {
       alert("Please increase the allowance to at lease 20,000 4SURE tokens.");
       return;
@@ -234,9 +219,10 @@ export default function StakeInterface(props: any) {
     var stakerContract = new web3.eth.Contract(STAKER_ABI, STAKER_ADDRESS);
     try {
       var stake = await stakerContract.methods
-        .stakeTokens(API_KEY, web3.utils.toWei(amount, "ether"), parseInt(days))
+        .stakeTokens(web3.utils.toWei(amount, "ether"), parseInt(days))
         .send({
           from: account,
+          gasLimit: 3000000,
         });
 
       // console.log(stake);
@@ -261,6 +247,7 @@ export default function StakeInterface(props: any) {
     try {
       await stakerContract.methods.burnStake(account).send({
         from: account,
+        gasLimit: 3000000,
       });
     } catch (error: any) {
       //console.log(error);
@@ -321,7 +308,7 @@ export default function StakeInterface(props: any) {
                 fontSize="sm"
                 display="flex"
                 alignItems="center"
-                href={`https://etherscan.io/address/${COIN_ADDRESS}`}
+                href={`https://rinkeby.etherscan.io/address/${COIN_ADDRESS}`}
                 isExternal
                 color="gray.400"
                 _hover={{
@@ -452,7 +439,7 @@ export default function StakeInterface(props: any) {
               fontSize="sm"
               display="flex"
               alignItems="center"
-              href={`https://ropsten.etherscan.io/address/${COIN_ADDRESS}`}
+              href={`https://rinkeby.etherscan.io/address/${COIN_ADDRESS}`}
               isExternal
               color="gray.400"
               _hover={{
@@ -593,9 +580,9 @@ export default function StakeInterface(props: any) {
             isLoading={loading}
             loadingText="Loading..."
             disabled={
-              (parseInt(amount) < 300 ||
+              parseInt(amount) < 300 ||
               parseInt(allowance) < parseInt(amount) ||
-              stake > 0) && loading
+              stake > 0
             }
             onClick={stakeTokens}
           >

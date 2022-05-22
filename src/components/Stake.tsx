@@ -5,7 +5,7 @@ import Countdown from "react-countdown";
 
 const STAKER_ABI = require("../assets/staker-abi.json");
 const STAKER_ADDRESS = process.env.REACT_APP_STAKER_ADDRESS;
-const API_KEY = process.env.REACT_APP_API_KEY;
+// const API_KEY = process.env.REACT_APP_API_KEY;
 
 export const Stake = (props: any) => {
   const web3 = props.web3;
@@ -20,7 +20,7 @@ export const Stake = (props: any) => {
     var stakerContract = new web3.eth.Contract(STAKER_ABI, STAKER_ADDRESS);
 
     stakerContract.methods
-      .getUserStake(account, API_KEY)
+      .getUserStake(account)
       .call()
       .then((res: any) => {
         if (isMounted.current) {

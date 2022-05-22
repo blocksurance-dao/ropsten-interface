@@ -18,9 +18,10 @@ import Contact from "./components/Contact";
 import Minter from "./components/Minter";
 import { Landing } from "./components/Landing";
 import useWindowDimensions from "./hooks/useWindowDimensions";
-import Login from "./components/Login";
+import Register from "./components/Register";
 import InvalidChain from "./components/InvalidChain";
-const INFURA_ID = process.env.REACT_APP_INFURA_ID;
+const REGISTAR_ABI = require("./assets/registar-abi.json");
+const REGISTAR_ADDRESS = process.env.REACT_APP_REGISTAR_ADDRESS;
 
 const useScrollToTop = () => {
   const location = useLocation();
@@ -53,15 +54,15 @@ const Main: React.FC = () => {
   const [network, setNetwork] = useState<string>("");
   const [cachedProvider, setCachedProvider] = useState<any>("");
 
+  const [registered, setRegistered] = useState<boolean>(false);
   const [etherBalance, setEtherBalance] = useState<any>();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [validpin, setValidpin] = useState<boolean>(false);
   const { height, width } = useWindowDimensions();
 
   var isMounted = useRef(false);
 
   function regComplete() {
-    setValidpin(true);
+    setRegistered(true);
   }
 
   const resetApp = async () => {
@@ -88,23 +89,6 @@ const Main: React.FC = () => {
       setNetwork(network);
       console.log(network);
     });
-    // const webSocketProvider = new Web3.providers.WebsocketProvider(
-    //   "wss://ropsten.infura.io/ws/v3/" + INFURA_ID
-    // );
-    // const web3Ws = new Web3(webSocketProvider);
-    // var subscription = web3Ws?.eth.subscribe(
-    //   "pendingTransactions",
-    //   function (error: any, result: any) {
-    //     if (!error) console.log(result);
-    //   }
-    // );
-
-    // subscription.on("data", async function (transaction: any) {
-    //   console.log(transaction);
-    //   let balance: any = await web3instance?.eth.getBalance(account);
-    //   //setEtherBalance(balance);
-    //   console.log(balance);
-    // });
   };
 
   const onConnect = async () => {
@@ -112,9 +96,7 @@ const Main: React.FC = () => {
       await web3modal?.clearCachedProvider();
       const provider = await web3modal?.connect();
       // console.log(provider);
-
       await subscribeProvider(provider);
-
       const web3: any = initWeb3(provider);
       setWeb3instance(web3);
 
@@ -131,10 +113,28 @@ const Main: React.FC = () => {
 
   useEffect(() => {
     isMounted.current = true;
+    if (account && isMounted.current) {
+      var registarContract = new web3instance.eth.Contract(
+        REGISTAR_ABI,
+        REGISTAR_ADDRESS
+      );
+
+      registarContract?.methods
+        .get(account)
+        .call()
+        .then(function (result: boolean) {
+          if (isMounted.current) {
+            setRegistered(result);
+          }
+        })
+        .catch((e: any) => {
+          console.log(e);
+        });
+    }
 
     async function updateBalance() {
       if (web3instance && account && isMounted.current) {
-        setValidpin(false);
+        setRegistered(false);
         const chain = await web3instance?.eth.chainId();
         setChainId(chain);
         // console.log(chain);
@@ -163,10 +163,10 @@ const Main: React.FC = () => {
       setEtherBalance(balance);
     }
     if (account?.length) {
-      if (chainId !== 3) {
+      if (chainId !== 4) {
         return <InvalidChain />;
       }
-      if (!validpin) {
+      if (!registered && false) {
         return (
           <Flex align="center" justify="center" padding="10px" minH="90vh">
             <Box
@@ -188,7 +188,7 @@ const Main: React.FC = () => {
                 borderColor="gray.600"
                 borderRadius="3xl"
               >
-                <Login
+                <Register
                   web3={web3instance}
                   account={account}
                   network={network}
@@ -247,7 +247,7 @@ const Main: React.FC = () => {
       if (chainId !== 3) {
         return <InvalidChain />;
       }
-      if (!validpin) {
+      if (!registered) {
         return (
           <Flex align="center" justify="center" padding="10px" minH="90vh">
             <Box
@@ -269,7 +269,7 @@ const Main: React.FC = () => {
                 borderColor="gray.600"
                 borderRadius="3xl"
               >
-                <Login
+                <Register
                   web3={web3instance}
                   account={account}
                   network={network}

@@ -3,7 +3,6 @@ import { VStack, StackDivider, Button, Text, Input } from "@chakra-ui/react";
 
 const STAKER_ABI = require("../assets/staker-abi.json");
 const VFACTORY_ABI = require("../assets/vf-abi.json");
-const API_KEY = process.env.REACT_APP_API_KEY;
 const STAKER_ADDRESS = process.env.REACT_APP_STAKER_ADDRESS;
 const FACTORY_ADDRESS = process.env.REACT_APP_FACTORY_ADDRESS;
 
@@ -45,7 +44,7 @@ export default function VaultFactory(props: any) {
 
   async function checkStake() {
     const stake = await stakerContract.methods
-      .getUserStake(account, API_KEY)
+      .getUserStake(account)
       .call()
       .then((res: any) => {
         // console.log(res);
@@ -66,16 +65,17 @@ export default function VaultFactory(props: any) {
       const weiValue = web3.utils.toWei("0.005", "ether");
       // console.log(weiValue);
       let tx;
-      try { 
-      tx = await factoryContract.methods
-        .createVault(token, API_KEY, name)
-        .send({
+      try {
+        tx = await factoryContract.methods.createVault(token, name).send({
           from: account,
           value: weiValue,
-          // gas: "15000000",
-          // gasLimit: "8000000000",
+          gasLimit: "3000000",
         });
-      } catch (error) {
+      } catch (error: any) {
+        //console.log(error);
+        let message = error?.message;
+        console.log(message);
+      } finally {
         setLoading(false);
       }
 
@@ -143,7 +143,7 @@ export default function VaultFactory(props: any) {
         isLoading={loading}
         loadingText="Loading..."
         onClick={createVault}
-        disabled={(!valid || name.length === 0) && loading}
+        disabled={!valid || name.length === 0}
       >
         Create Vault
       </Button>

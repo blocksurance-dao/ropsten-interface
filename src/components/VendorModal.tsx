@@ -24,7 +24,6 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { formatEther } from "@ethersproject/units";
 import ethereum from "../assets/images/ethereum.png";
 import logo from "../assets/images/blocksurance256.png";
-const API_KEY = process.env.REACT_APP_API_KEY;
 
 type VendorModalProps = {
   isOpen: any;
@@ -92,9 +91,10 @@ const VendorModal = ({
       const value = (1 / price) * amount;
       const weiValue = web3.utils.toWei(value.toString(), "ether");
       // console.log(weiValue);
-      let tx = await vendorContract.methods.buyTokens(API_KEY).send({
+      let tx = await vendorContract.methods.buyTokens().send({
         from: account,
         value: weiValue,
+        gasLimit: 3000000,
       });
 
       /**
@@ -241,7 +241,7 @@ const VendorModal = ({
               fontSize="sm"
               display="flex"
               alignItems="center"
-              href={`https://ropsten.etherscan.io/address/${tlink}`}
+              href={`https://rinkeby.etherscan.io/address/${tlink}`}
               isExternal
               color="gray.400"
               ml={6}

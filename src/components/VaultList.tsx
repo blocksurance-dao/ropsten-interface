@@ -7,7 +7,6 @@ import VaultInterface from "./VaultInterface";
 
 const FACTORY_ADDRESS = process.env.REACT_APP_FACTORY_ADDRESS;
 const FACTORY_ABI = require("../assets/vf-abi.json");
-const API_KEY = process.env.REACT_APP_API_KEY;
 
 export default function VaultFactory(props: any) {
   const web3 = props.web3;
@@ -41,7 +40,7 @@ export default function VaultFactory(props: any) {
     var factoryContract = new web3.eth.Contract(FACTORY_ABI, FACTORY_ADDRESS);
     isMounted.current = true;
     factoryContract.methods
-      .getUserVaults(account, API_KEY)
+      .getUserVaults(account)
       .call()
       .then((res: any) => {
         if (isMounted.current) {
