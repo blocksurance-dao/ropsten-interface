@@ -5,34 +5,6 @@
         "internalType": "address",
         "name": "_addr",
         "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_apiKey",
-        "type": "address"
-      },
-      {
-        "internalType": "uint24",
-        "name": "pinCode",
-        "type": "uint24"
-      }
-    ],
-    "name": "register",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_addr",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_apiKey",
-        "type": "address"
       }
     ],
     "name": "get",
@@ -49,25 +21,69 @@
   {
     "inputs": [
       {
-        "internalType": "uint24",
-        "name": "pinCode",
-        "type": "uint24"
-      },
-      {
         "internalType": "address",
-        "name": "_apiKey",
+        "name": "_addr",
         "type": "address"
       }
     ],
-    "name": "validatePin",
+    "name": "getRef",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "address",
         "name": "",
-        "type": "bool"
+        "type": "address"
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_addr",
+        "type": "address"
+      }
+    ],
+    "name": "getUser",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "ref",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "time",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Registar.User",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_addr",
+        "type": "address"
+      }
+    ],
+    "name": "register",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]
