@@ -27,7 +27,7 @@
     {
       "chainId": 1,
       "name": "Dai Stablecoin",
-      "address": "0x6b175474e89094c44da98b954eedeac495271d0f",
+      "address": "0x212e47985B332A497Ac524E6d316EA4E1C62c05C",
       "symbol": "DAI",
       "decimals": 18,
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/4943.png"
@@ -43,7 +43,7 @@
     {
       "chainId": 1,
       "name": "Chainlink",
-      "address": "0x514910771af9ca656af840dff83e8264ecf986ca",
+      "address": "0xB65f394540A3e281A97ff4967b40f73aAAb87274",
       "symbol": "LINK",
       "decimals": 18,
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1975.png"
