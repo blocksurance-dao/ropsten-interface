@@ -124,6 +124,7 @@ const Main: React.FC = () => {
         .call()
         .then(function (result: boolean) {
           if (isMounted.current) {
+            // console.log(result);
             setRegistered(result);
           }
         })
@@ -166,7 +167,7 @@ const Main: React.FC = () => {
       if (chainId !== 4) {
         return <InvalidChain />;
       }
-      if (!registered && false) {
+      if (!registered) {
         return (
           <Flex align="center" justify="center" padding="10px" minH="90vh">
             <Box
@@ -193,8 +194,6 @@ const Main: React.FC = () => {
                   account={account}
                   network={network}
                   regComplete={regComplete}
-                  // registered={registered}
-                  // validpin={validpin}
                 />
               </Box>
             </Box>
@@ -274,8 +273,6 @@ const Main: React.FC = () => {
                   account={account}
                   network={network}
                   regComplete={regComplete}
-                  // registered={registered}
-                  // validpin={validpin}
                 />
               </Box>
             </Box>
