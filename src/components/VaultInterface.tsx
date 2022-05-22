@@ -9,7 +9,7 @@ import {
   Button,
   Text,
 } from "@chakra-ui/react";
-import { useColorMode } from "@chakra-ui/react";
+import { useColorMode, useDisclosure } from "@chakra-ui/react";
 import {
   CloseIcon,
   CopyIcon,
@@ -17,6 +17,7 @@ import {
   WarningTwoIcon,
 } from "@chakra-ui/icons";
 import Identicon from "./Identicon";
+import ClaimModal from "./ClaimModal";
 
 const TOKENLIST = require("../assets/TokenList.json");
 const VAULT_ABI = require("../assets/vault-abi.json");
@@ -40,6 +41,7 @@ export default function VaultInterface(props: any) {
   const [userBal, setUserbal] = useState<any>();
   const [allowance, setAllowance] = useState<any>();
   const [tokenObject, setTokenObject] = useState<any>({});
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   var isMounted = useRef(false);
 
@@ -357,7 +359,33 @@ export default function VaultInterface(props: any) {
               <WarningTwoIcon ml={5} color="yellow.300" />
             )}
           </HStack>
-          <StackDivider h={"100px"} />
+          <StackDivider h={"30px"} />
+          {balance > 0 && stake > 0 && (
+            <Button
+              h={"40px"}
+              minW={"100%"}
+              mb={5}
+              border="1px"
+              borderStyle="solid"
+              borderColor="gray.400"
+              isLoading={loading}
+              loadingText="Loading..."
+              disabled={!parseInt(balance)}
+              onClick={onOpen}
+            >
+              Make Claim
+            </Button>
+          )}
+
+          <ClaimModal
+            isOpen={isOpen}
+            onClose={onClose}
+            web3={web3}
+            account={account}
+            vault={active}
+            symbol={symbol}
+          />
+          <StackDivider h={"30px"} />
           <Button
             h={"40px"}
             minW={"100%"}
