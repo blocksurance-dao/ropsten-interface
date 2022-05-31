@@ -8,6 +8,7 @@ import {
   Input,
   Button,
   Text,
+  Link,
 } from "@chakra-ui/react";
 import { useColorMode, useDisclosure } from "@chakra-ui/react";
 import {
@@ -15,7 +16,9 @@ import {
   CopyIcon,
   LockIcon,
   WarningTwoIcon,
+  ExternalLinkIcon,
 } from "@chakra-ui/icons";
+
 import Identicon from "./Identicon";
 import ClaimModal from "./ClaimModal";
 
@@ -29,11 +32,13 @@ export default function VaultInterface(props: any) {
   const web3 = props.web3;
   const active = props.item;
   const account = props.account;
+  const vaultAddress = props.item.vaultAddress;
   const { colorMode } = useColorMode();
   const [loading, setLoading] = useState<any>(false);
 
   const [token, setToken] = useState<any>("");
   const [stake, setStake] = useState<number>(0);
+  const [claim, setClaim] = useState<number>(0);
   const [symbol, setSymbol] = useState<any>("");
   const [approve, setApprove] = useState<any>(false);
   const [copied, setCopied] = useState<any>(false);
@@ -43,6 +48,21 @@ export default function VaultInterface(props: any) {
   const [tokenObject, setTokenObject] = useState<any>({});
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  async function onCloseCustom() {
+    onClose();
+
+    var vaultContract = new web3.eth.Contract(VAULT_ABI, vaultAddress);
+    vaultContract.methods
+      .claim()
+      .call()
+      .then((res: any) => {
+        setClaim(res);
+      })
+      .catch((e: any) => {
+        console.log(e);
+      });
+  }
+
   var isMounted = useRef(false);
 
   useEffect(() => {
@@ -51,6 +71,7 @@ export default function VaultInterface(props: any) {
       props.item?.tokenAddress
     );
     var stakerContract = new web3.eth.Contract(STAKER_ABI, STAKER_ADDRESS);
+    var vaultContract = new web3.eth.Contract(VAULT_ABI, vaultAddress);
     isMounted.current = true;
 
     let tokenObject: { decimals: number };
@@ -64,8 +85,21 @@ export default function VaultInterface(props: any) {
       }
     }
 
+    vaultContract.methods
+      .claim()
+      .call()
+      .then((res: any) => {
+        if (isMounted.current) {
+          setClaim(res);
+          console.log(res);
+        }
+      })
+      .catch((e: any) => {
+        console.log(e);
+      });
+
     coinContract.methods
-      .allowance(account, props.item?.vaultAddress)
+      .allowance(account, vaultAddress)
       .call()
       .then((res: any) => {
         if (isMounted.current) {
@@ -79,7 +113,7 @@ export default function VaultInterface(props: any) {
       });
 
     coinContract.methods
-      .balanceOf(props.item?.vaultAddress)
+      .balanceOf(vaultAddress)
       .call()
       .then((res: any) => {
         if (isMounted.current) {
@@ -136,7 +170,7 @@ export default function VaultInterface(props: any) {
       // executed when unmount
       isMounted.current = false;
     };
-  }, [loading, account, web3, props.item, active]);
+  }, [loading, account, web3, vaultAddress, active]);
 
   function strtodec(amount: string, dec: number) {
     let stringf = "";
@@ -299,7 +333,36 @@ export default function VaultInterface(props: any) {
           Available: {userBal}
         </Text>
       </Box>
-      {balance < 1 ? (
+      {Number(claim) !== 0 ? (
+        <HStack
+          bg={colorMode === "dark" ? "gray.700" : "gray.100"}
+          w="100%"
+          p={4}
+          mt={"3px"}
+          border="3px"
+          borderStyle="solid"
+          borderRadius="5px"
+          borderColor={colorMode === "dark" ? "gray.700" : "gray.100"}
+        >
+          <Text fontSize="lg">You have a pending claim.</Text>
+
+          <Link
+            fontSize="sm"
+            display="flex"
+            alignItems="center"
+            href={`https://www.tally.xyz/governance/eip155:4:0xcfd4aB1176Dd2F3bB76c0922646f3625c4B39D81/proposal/${claim}`}
+            isExternal
+            color="gray.400"
+            ml={6}
+            _hover={{
+              color: "whiteAlpha.800",
+              textDecoration: "underline",
+            }}
+          >
+            <ExternalLinkIcon m={2} w={5} h={5} color="blue.400" />
+          </Link>
+        </HStack>
+      ) : balance < 1 ? (
         <>
           <Text fontSize="sm" ml={4} maxW={"340px"}>
             You must approve transfer of tokens to your vault, current
@@ -379,7 +442,7 @@ export default function VaultInterface(props: any) {
 
           <ClaimModal
             isOpen={isOpen}
-            onClose={onClose}
+            onClose={onCloseCustom}
             web3={web3}
             account={account}
             vault={active}
