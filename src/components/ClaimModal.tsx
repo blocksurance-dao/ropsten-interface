@@ -21,8 +21,7 @@ import { useColorMode } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 import ethereum from "../assets/images/ethereum.png";
-const GOVERNOR_ABI = require("../assets/governor-abi.json");
-const GOVERNOR_ADDRESS = process.env.REACT_APP_GOVERNOR_ADDRESS;
+const VAULT_ABI = require("../assets/vault-abi.json");
 
 type ClaimModalProps = {
   isOpen: any;
@@ -44,39 +43,26 @@ const ClaimModal = ({
   const { colorMode } = useColorMode();
 
   const [tlink, setTLink] = useState<any>("");
+  const [claim, setClaim] = useState<any>("");
   const [amount, setAmount] = useState<any>("");
   const [loading, setLoading] = useState<any>(false);
 
   async function Claim() {
     setLoading(true);
-
-    var governorContract = new web3.eth.Contract(
-      GOVERNOR_ABI,
-      GOVERNOR_ADDRESS
-    );
-
+    var vaultContract = new web3.eth.Contract(VAULT_ABI, vault?.vaultAddress);
     const weiValue = web3.utils.toWei(amount, "ether");
-    const signature = web3.eth.abi.encodeFunctionSignature(
-      "_transfer(address,uint256)"
-    );
 
     try {
-      var tx = await governorContract.methods
-        .propose(
-          [account],
-          [weiValue],
-          [signature],
-          `Claim lost value from vault ${vault?.vaultAddress} for token  ${symbol}  ${vault?.tokenAddress}`
-        )
-        .send({
-          from: account,
-          gasLimit: 3000000,
-        });
+      var tx = await vaultContract.methods.makeClaim(weiValue).send({
+        from: account,
+        gasLimit: 3000000,
+      });
       // console.log(tx);
 
       if (tx.transactionHash) {
         alert("You claim has been recorded!");
-        console.log("Proposal ID", tx.events.ProposalCreated.returnValues[0]);
+        console.log("Proposal ID", tx.events.ClaimCreated.returnValues[0]);
+        setClaim(tx.events.ClaimCreated.returnValues[0]);
         console.log("Transaction:", tx.transactionHash);
         setTLink(tx.transactionHash);
       }
@@ -173,7 +159,7 @@ const ClaimModal = ({
               isLoading={loading}
             >
               <Text fontSize="md" fontWeight="medium">
-                Claim
+                Continue
               </Text>
             </Button>
           </VStack>
@@ -182,7 +168,6 @@ const ClaimModal = ({
 
         <ModalFooter
           justifyContent="center"
-          //background="gray.700"
           borderBottomLeftRadius="3xl"
           borderBottomRightRadius="3xl"
           p={6}
@@ -202,9 +187,27 @@ const ClaimModal = ({
                 textDecoration: "underline",
               }}
             >
-              Confirmed: <ExternalLinkIcon m={2} w={5} h={5} color="blue.400" />
+              Etherscan: <ExternalLinkIcon m={2} w={5} h={5} color="blue.400" />
             </Link>
           )}
+          {claim && (
+            <Link
+              fontSize="sm"
+              display="flex"
+              alignItems="center"
+              href={`https://www.tally.xyz/governance/eip155:4:0xcfd4aB1176Dd2F3bB76c0922646f3625c4B39D81/proposal/${claim}`}
+              isExternal
+              color="gray.400"
+              ml={6}
+              _hover={{
+                color: "whiteAlpha.800",
+                textDecoration: "underline",
+              }}
+            >
+              Tally: <ExternalLinkIcon m={2} w={5} h={5} color="blue.400" />
+            </Link>
+          )}
+          {/* https://www.tally.xyz/governance/eip155:4:0xcfd4aB1176Dd2F3bB76c0922646f3625c4B39D81/proposal/ */}
         </ModalFooter>
       </ModalContent>
     </Modal>
