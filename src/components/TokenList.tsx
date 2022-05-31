@@ -43,7 +43,7 @@ function ListItem({ children, ...props }: any) {
           fontSize="sm"
           display="flex"
           alignItems="center"
-          href={`https://ropsten.etherscan.io/address/${item.address}`}
+          href={`https://rinkeby.etherscan.io/address/${item.address}`}
           isExternal
           color="gray.400"
           _hover={{
