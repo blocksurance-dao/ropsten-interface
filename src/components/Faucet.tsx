@@ -41,11 +41,11 @@ export default function Faucet(props: any) {
   }, []);
 
   async function buyTokens(tokenAddress: string) {
-    setLoading(true);
     if (!account?.length) {
       alert("Connect wallet!");
       return;
     }
+    setLoading(true);
     if (amount) {
       const faucetContract = new web3.eth.Contract(
         CONTRACT_ABI,
