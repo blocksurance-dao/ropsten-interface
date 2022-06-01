@@ -31,8 +31,8 @@ const NavbarWrapper = styled.div`
   z-index: 200;
 `;
 
-const Links = ["About", "Contact", "FAQ"];
-const URLS = ["/about", "/contact", "/faq"];
+const Links = ["About", "Faucet", "FAQ"];
+const URLS = ["/about", "/Faucet", "/faq"];
 
 function NavLink({ to, children, ...props }: LinkProps) {
   let resolved = useResolvedPath(to);
@@ -146,7 +146,7 @@ const Navbar: FC<{
                       <NavLink to={"/about"}>{"About"}</NavLink>
                     </Box>
                     <Box p={3}>
-                      <NavLink to={"/contact"}>{"Contact"}</NavLink>
+                      <NavLink to={"/faucet"}>{"Faucet"}</NavLink>
                     </Box>
                     <Box p={3}>
                       <CLink

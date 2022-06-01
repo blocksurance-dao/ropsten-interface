@@ -14,6 +14,7 @@ import { useDisclosure } from "@chakra-ui/react";
 import InterfaceMain from "./components/InterfaceMain";
 import FAQ from "./components/FAQ";
 import About from "./components/About";
+import Faucet from "./components/Faucet";
 import Contact from "./components/Contact";
 import Minter from "./components/Minter";
 import { Landing } from "./components/Landing";
@@ -156,13 +157,14 @@ const Main: React.FC = () => {
     };
   }, [account, chainId, web3instance]);
 
+  async function _updateBalance() {
+    let balance: any = await web3instance?.eth.getBalance(account);
+    setEtherBalance(balance);
+  }
+
   function Home() {
     useScrollToTop();
 
-    async function _updateBalance() {
-      let balance: any = await web3instance?.eth.getBalance(account);
-      setEtherBalance(balance);
-    }
     if (account?.length) {
       if (chainId !== 4) {
         return <InvalidChain />;
@@ -302,6 +304,16 @@ const Main: React.FC = () => {
         <Route path="/about" element={<About />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/contact" element={<Contact />} />
+        <Route
+          path="/faucet"
+          element={
+            <Faucet
+              web3={web3instance}
+              account={account}
+              updateBalance={_updateBalance}
+            />
+          }
+        />
         <Route path="/airdrop" element={<Airdrop />} />
       </Routes>
 

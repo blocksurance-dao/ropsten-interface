@@ -66,10 +66,7 @@ export default function VaultInterface(props: any) {
   var isMounted = useRef(false);
 
   useEffect(() => {
-    var coinContract = new web3.eth.Contract(
-      ERC20_ABI,
-      props.item?.tokenAddress
-    );
+    var coinContract = new web3.eth.Contract(ERC20_ABI, active?.tokenAddress);
     var stakerContract = new web3.eth.Contract(STAKER_ABI, STAKER_ADDRESS);
     var vaultContract = new web3.eth.Contract(VAULT_ABI, vaultAddress);
     isMounted.current = true;
@@ -91,7 +88,7 @@ export default function VaultInterface(props: any) {
       .then((res: any) => {
         if (isMounted.current) {
           setClaim(res);
-          console.log(res);
+          // console.log(res);
         }
       })
       .catch((e: any) => {
