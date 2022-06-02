@@ -46,7 +46,7 @@ export default function Faucet(props: any) {
       return;
     }
     setLoading(true);
-    if (amount) {
+    try {
       const faucetContract = new web3.eth.Contract(
         CONTRACT_ABI,
         CONTRACT_ADDRESS
@@ -69,8 +69,12 @@ export default function Faucet(props: any) {
         setTLink(tx.transactionHash);
         props.updateBalance();
       }
+    } catch (error: any) {
+      let message = error?.message;
+      console.log(message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   const fetchMoreData = () => {
